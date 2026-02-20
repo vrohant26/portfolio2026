@@ -8,40 +8,88 @@ get_header();
 
 
   <section id="archive" class="flex h-full p-sm direction-column justify-between">
-    <div class="top flex align-end">
-      
+    <div class="top flex gap-lg direction-column justify-end">
+      <h4 class="fs-sm w-50 text-light">Where I experiment, break things,<br> and occasionally build something cool.</h4>
       <div class="flex w-full justify-between mb-xs">
-        <div class="social-link   flex align-center gap-xs">
-
-          <a class="scramble fs-xs text-light" target="_blank" href="https://www.linkedin.com/in/rohant-villarosa-a48481219/">Linkedin </a>
-          <svg class="icon" viewBox="0 0 9 9"  xmlns="http://www.w3.org/2000/svg">
-            <path d="M6.68067 2.276L0.942667 8.014L0 7.07133L5.738 1.33333H0.68V0H8.01333V7.33333H6.68L6.68067 2.276Z" />
-          </svg>
+        
+        <!-- All Filter -->
+        <div class="social-link flex align-center gap-xs cursor-pointer filter-btn active" data-filter="all">
+            <span class="scramble fs-xs text-gray-500">All</span>
+           
         </div>
-          <div class="social-link justify-between flex align-center gap-xs">
 
-          <a class="scramble fs-xs text-light" href="https://wa.link/hxp7gc">whatsapp </a>
-          <svg class="icon" viewBox="0 0 9 9"  xmlns="http://www.w3.org/2000/svg">
-            <path d="M6.68067 2.276L0.942667 8.014L0 7.07133L5.738 1.33333H0.68V0H8.01333V7.33333H6.68L6.68067 2.276Z" />
-          </svg>
-        </div>
-          <div class="social-link justify-between flex align-center gap-xs">
+        <?php
+        // Get taxonomies for the 'archive' post type
+        $taxonomies = get_object_taxonomies('archive', 'names');
+        $taxonomy = !empty($taxonomies) ? $taxonomies[0] : 'category'; // Fallback to 'category' if no custom taxonomy found
 
-          <a class="scramble fs-xs text-light" href="mailto:hello@rohantvillarosa.in">email </a>
-          <svg class="icon" viewBox="0 0 9 9"  xmlns="http://www.w3.org/2000/svg">
-            <path d="M6.68067 2.276L0.942667 8.014L0 7.07133L5.738 1.33333H0.68V0H8.01333V7.33333H6.68L6.68067 2.276Z" />
-          </svg>
-        </div>
-          <div class="social-link justify-between flex align-center gap-xs">
+        $terms = get_terms(array(
+            'taxonomy' => $taxonomy,
+            'hide_empty' => true,
+        ));
 
-          <a class="scramble fs-xs text-light" href="#">dribble </a>
-          <svg class="icon" viewBox="0 0 9 9"  xmlns="http://www.w3.org/2000/svg">
-            <path d="M6.68067 2.276L0.942667 8.014L0 7.07133L5.738 1.33333H0.68V0H8.01333V7.33333H6.68L6.68067 2.276Z" />
-          </svg>
-        </div>
+        if (!empty($terms) && !is_wp_error($terms)) :
+            foreach ($terms as $term) :
+                if (strtolower($term->name) === 'uncategorized') continue; 
+        ?>
+            <div class="social-link flex align-center gap-xs cursor-pointer filter-btn" data-filter="<?php echo esc_attr($term->slug); ?>">
+                <span class="scramble fs-xs text-gray-500">
+                    <?php echo esc_html($term->name); ?>
+                </span>
+            
+            </div>
+        <?php
+            endforeach;
+        endif; 
+        ?>
       </div>
     </div>
-    <div class="bottom"></div>
+    <div class="bottom">
+      <div class="archive-grid">
+        <?php
+        $args = array(
+          'post_type' => 'archive',
+          'posts_per_page' => -1,
+          'post_status' => 'publish',
+        );
+        $archive_query = new WP_Query($args);
+
+        if ($archive_query->have_posts()) :
+          $count = 1;
+          while ($archive_query->have_posts()) : $archive_query->the_post();
+            $image = get_the_post_thumbnail_url(get_the_ID(), 'full');
+            
+            // Get post terms for filtering
+            $post_terms = get_the_terms(get_the_ID(), $taxonomy);
+            $term_slugs = '';
+            if ($post_terms && !is_wp_error($post_terms)) {
+                $term_slugs = implode(' ', wp_list_pluck($post_terms, 'slug'));
+            }
+            ?>
+            <div class="archive-item flex direction-column  <?php echo esc_attr($term_slugs); ?>" data-category="<?php echo esc_attr($term_slugs); ?>">
+              <div class="archive-image mb-sm flex justify-center align-end">
+                <?php if ($image) : ?>
+                  <img src="<?php echo esc_url($image); ?>" alt="<?php the_title_attribute(); ?>">
+               
+               
+                <?php endif; ?>
+              </div>
+              <div class="archive-info flex justify-between align-start">
+                <h3 class="fs-xs text-light"><?php the_title(); ?></h3>
+                 <span class="fs-xs text-gray-500 text-nowrap">[ <?php echo str_pad($count, 2, '0', STR_PAD_LEFT); ?> ]</span>
+              </div>
+               <p class="fs-xs text-gray-500"><?php echo esc_html($term_slugs);?></p>
+            </div>
+            <?php
+            $count++;
+            endwhile;
+          wp_reset_postdata();
+        else :
+          ?>
+          <p class="fs-xs">No archive items found.</p>
+        <?php endif; ?>
+      </div>
+    </div>
   </section>
 
 

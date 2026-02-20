@@ -41,7 +41,7 @@ get_header();
       </div>
     </div>
     <div class="bottom flex align-center justify-end">
-      <h2 class="fs-sm about-me text-light">For the past five years, I’ve been building clean, functional websites that don’t just look good, they make sense. I obsess over the tiny details (even the ones no one notices). But design alone isn’t enough. A website should attract the right people, guide them naturally, and turn visits into real results. If everything works perfectly, I’m proud. If it works on the first try, I don’t trust it.</h2>  
+      <h2 class="fs-sm w-50 text-light">For the past five years, I’ve been building clean, functional websites that don’t just look good, they make sense. I obsess over the tiny details (even the ones no one notices). But design alone isn’t enough. A website should attract the right people, guide them naturally, and turn visits into real results. If everything works perfectly, I’m proud. If it works on the first try, I don’t trust it.</h2>  
     </div>
   </section>
 

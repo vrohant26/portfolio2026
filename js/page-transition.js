@@ -3,7 +3,6 @@ const updateActiveLink = () => {
   const currentPath = window.location.pathname.replace(/\/$/, "");
 
   links.forEach((link) => {
-    // Get path from href (handle relative/absolute)
     const linkPath = new URL(link.href).pathname.replace(/\/$/, "");
 
     if (linkPath === currentPath) {
@@ -15,6 +14,7 @@ const updateActiveLink = () => {
 };
 
 barba.init({
+  debug: true,
   views: [
     {
       namespace: "work",
@@ -31,7 +31,7 @@ barba.init({
 
       once(data) {
         updateActiveLink();
-
+        initSwiper();
         initGrained();
         animationEnter(data.next.container);
       },
@@ -44,6 +44,8 @@ barba.init({
       enter(data) {
         initScramble();
         updateActiveLink();
+        initArchiveFilter();
+        initChat();
         animationEnter(data.next.container);
       },
     },

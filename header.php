@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php wp_head(); ?>
 </head>
-<body id="grained-container" <?php body_class(); ?> data-barba="wrapper">
+<body  <?php body_class(); ?> data-barba="wrapper">
 <?php wp_body_open(); ?>
 
-<header  class="site-header p-sm  w-full flex justify-between">
+<header   class="site-header p-sm  w-full flex justify-between">
     <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="logo fit-content">
       <svg  viewBox="0 0 56 42"  xmlns="http://www.w3.org/2000/svg">
         <path d="M0 0H14V42H0V0Z" />
@@ -24,8 +24,6 @@
             <li><a class="scramble" href="<?php echo esc_url( home_url( '/about' ) ); ?>">About</a></li>
             <li><a class="scramble" href="<?php echo esc_url( home_url( '/archive' ) ); ?>">Archive</a></li>
             <li><a class="scramble" href="<?php echo esc_url( home_url( '/insights' ) ); ?>">Insights</a></li>
-
-
         </ul>
       </nav>
 
@@ -45,4 +43,4 @@
   data-barba="container" 
   data-barba-namespace="<?php echo is_front_page() ? 'work' : esc_attr( get_post_field( 'post_name', get_post() ) ); ?>">
 
-<!-- <div id="grained-container"></div> -->
+<div id="grained-container"></div>

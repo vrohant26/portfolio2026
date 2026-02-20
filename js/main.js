@@ -44,10 +44,16 @@ const initScramble = () => {
 
     gsap.registerPlugin(ScrambleTextPlugin);
 
-    const scrambleElements = document.querySelectorAll(".scramble");
+    const scrambleElements = document.querySelectorAll(
+      ".scramble:not(.scramble-initialized)",
+    );
 
     scrambleElements.forEach((el) => {
+      // Mark as initialized
+      el.classList.add("scramble-initialized");
+
       const originalText = el.innerText;
+      el.setAttribute("data-original-text", originalText);
 
       // Lock width to prevent layout shift
       const rect = el.getBoundingClientRect();
@@ -62,6 +68,7 @@ const initScramble = () => {
             text: originalText,
             chars: "uppercase",
           },
+          overwrite: true,
         });
       });
     });
@@ -92,12 +99,12 @@ const initGrained = () => {
   if (grainedEl) {
     const options = {
       animate: true,
-      patternWidth: 100,
-      patternHeight: 100,
+      patternWidth: 500,
+      patternHeight: 500,
       grainOpacity: 0.05,
-      grainDensity: 1,
-      grainWidth: 1,
-      grainHeight: 1,
+      grainDensity: 8.05,
+      grainWidth: 10,
+      grainHeight: 1.89,
     };
     if (typeof window.grained === "function") {
       window.grained("#grained-container", options);
@@ -105,11 +112,180 @@ const initGrained = () => {
   }
 };
 
+const initArchiveFilter = () => {
+  const filterBtns = document.querySelectorAll(".filter-btn");
+  const grid = document.querySelector(".archive-grid");
+  const items = document.querySelectorAll(".archive-item");
+
+  if (!filterBtns.length || !grid || !items.length) return;
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (btn.classList.contains("active")) return;
+
+      // Remove active class from all
+      filterBtns.forEach((b) => b.classList.remove("active"));
+      // Add active class to clicked
+      btn.classList.add("active");
+
+      const filterValue = btn.getAttribute("data-filter");
+
+      // Use GSAP to fade out the grid, swap items, then fade in
+      if (typeof gsap !== "undefined") {
+        gsap.to(grid, {
+          duration: 0.25,
+          autoAlpha: 0,
+          y: 10,
+          ease: "power2.in",
+          onComplete: () => {
+            // Filter items
+            items.forEach((item) => {
+              if (
+                filterValue === "all" ||
+                item.classList.contains(filterValue)
+              ) {
+                item.style.display = "flex";
+              } else {
+                item.style.display = "none";
+              }
+            });
+
+            // Fade grid back in
+            gsap.to(grid, {
+              duration: 0.4,
+              autoAlpha: 1,
+              y: 0,
+              ease: "power2.out",
+            });
+          },
+        });
+      } else {
+        // Fallback without GSAP
+        items.forEach((item) => {
+          if (filterValue === "all" || item.classList.contains(filterValue)) {
+            item.style.display = "flex";
+          } else {
+            item.style.display = "none";
+          }
+        });
+      }
+    });
+  });
+};
+
+const initChat = () => {
+  const form = document.getElementById("contact-form");
+  const chatMessages = document.getElementById("chat-messages");
+  const emailInput = document.getElementById("user-email");
+
+  if (!form || !chatMessages) return;
+
+  // Initial animation for existing messages
+  const initialMessages = chatMessages.querySelectorAll(".chat-message");
+  if (initialMessages.length) {
+    gsap.to(initialMessages, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      stagger: 0.8, // delay between user and bot message
+      delay: 0.5,
+      ease: "power2.out",
+    });
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const email = emailInput.value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // helper to add bot message with typing indicator
+    const botRespond = (text, delay = 1500) => {
+      const typingMsg = document.createElement("div");
+      typingMsg.className =
+        "chat-message bot flex align-end gap-sm typing-container";
+      typingMsg.innerHTML = `
+          <div class="avatar" style="margin-bottom: -10px;">
+             <img src="${window.themeUri || ""}/assets/images/avatar.png" alt="Avatar">
+          </div>
+          <div class="bubble bot-bubble">
+              <div class="typing-dots">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+              </div>
+          </div>
+      `;
+      chatMessages.appendChild(typingMsg);
+      gsap.to(typingMsg, { opacity: 1, y: 0, duration: 0.4 });
+
+      chatMessages.scrollTo({
+        top: chatMessages.scrollHeight,
+        behavior: "smooth",
+      });
+
+      setTimeout(() => {
+        typingMsg.remove();
+        const msg = document.createElement("div");
+        msg.className = "chat-message bot flex align-end gap-sm";
+        msg.innerHTML = `
+          <div class="avatar" style="margin-bottom: -10px;">
+             <img src="${window.themeUri || ""}/assets/images/avatar.png" alt="Avatar">
+          </div>
+          <div class="bubble bot-bubble">${text}</div>
+        `;
+        chatMessages.appendChild(msg);
+        gsap.to(msg, { opacity: 1, y: 0, duration: 0.4 });
+        chatMessages.scrollTo({
+          top: chatMessages.scrollHeight,
+          behavior: "smooth",
+        });
+      }, delay);
+    };
+
+    if (!email) {
+      botRespond("You forgot to type your email!");
+      return;
+    }
+
+    if (!emailRegex.test(email)) {
+      botRespond(
+        "That doesn't look like a valid email. Could you check it again?",
+      );
+      return;
+    }
+
+    // 1. Add User Message
+    const userMsg = document.createElement("div");
+    userMsg.className = "chat-message user flex align-end gap-sm";
+    userMsg.innerHTML = `
+        <div class="bubble user-bubble">
+            ${email}
+        </div>
+    `;
+    chatMessages.appendChild(userMsg);
+    gsap.to(userMsg, { opacity: 1, y: 0, duration: 0.4 });
+
+    // Clear and scroll
+    emailInput.value = "";
+    emailInput.blur();
+    chatMessages.scrollTo({
+      top: chatMessages.scrollHeight,
+      behavior: "smooth",
+    });
+
+    // 2. Success Bot Response
+    botRespond("Got it. Keep an eye on your inbox 👀", 2000);
+  });
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initScramble();
   initSwiper();
   initGrained();
+  initArchiveFilter();
+  initChat();
   setInterval(updateMumbaiTime, 1000);
   updateMumbaiTime();
 });
