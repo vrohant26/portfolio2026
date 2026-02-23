@@ -1,7 +1,7 @@
 </main>
  
 <footer id="footer" class="site-footer justify-between align-end flex p-sm fs-xs text-light">
-  <span id="mumbai-time" ></span>
+  <span class="fs-xs" id="mumbai-time" ></span>
    <div class="cta fit-content flex align-center gap-xs mobile-show  corner-border">
       <div class="blinking"></div>
       <a class="fs-xs scramble" href="<?php echo esc_url( home_url( '/contact' ) ); ?>">Hire me, I swear im good</a>

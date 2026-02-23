@@ -68,7 +68,7 @@ const getWorkTimeline = (container) => {
         stagger: 0.09,
         ease: "expo.inOut",
       },
-      "-=2",
+      "-=2.5",
     );
   }
 
@@ -192,11 +192,11 @@ const getOtherTimeline = (container, skipBorder = false) => {
   if (topEl && !skipBorder) {
     tl.fromTo(
       topEl,
-      { "--border-progress": "0%" },
+      { "--border-progress": "0%", opacity: 0 },
       {
         "--border-progress": "100%",
-
-        duration: 2,
+        opacity: 1,
+        duration: 2.5,
         ease: "expo.inOut",
       },
       0,
@@ -270,12 +270,29 @@ const animationFadeLeave = (container, done, skipBorder = false) => {
   tl.progress(1).reverse();
 };
 
+const animationSimpleFadeLeave = (container, done) => {
+  gsap.set(container, {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    zIndex: 1,
+  });
+  gsap.to(container, {
+    opacity: 0,
+    duration: 1,
+    ease: "power2.out",
+  });
+  // Pad the transition time to exactly 2s so the container doesn't disappear early while the next page is entering
+  gsap.delayedCall(2, done);
+};
+
 const animationFadeEnter = (container, skipBorder = false) => {
   gsap.set(container, { opacity: 1, zIndex: 2 });
   const tl = getOtherTimeline(container, skipBorder);
 
-  // Explicitly wait 0.5s before playing the entrance animation, preventing overlap
-  gsap.delayedCall(0, () => {
+  // Explicitly wait 1s before playing the entrance animation, preventing overlap with the 2s exit transition
+  gsap.delayedCall(1, () => {
     tl.play();
   });
 };
@@ -283,6 +300,10 @@ const animationFadeEnter = (container, skipBorder = false) => {
 /* ==========================================================================
    Barba Init
    ========================================================================== */
+
+const getSkipBorder = (data) =>
+  data.current.container.querySelector(".top") &&
+  data.next.container.querySelector(".top");
 
 barba.hooks.before(() => {
   document.body.style.pointerEvents = "none";
@@ -309,21 +330,28 @@ barba.init({
 
   transitions: [
     {
-      name: "work-to-contact-transition",
+      name: "to-contact-transition",
       sync: true,
-      from: {
-        namespace: ["work"],
-      },
       to: {
         namespace: ["contact"],
       },
       leave(data) {
         const done = this.async();
-        animationWorkToOtherLeave(data.current.container, done);
+        if (data.current.namespace === "work") {
+          animationWorkToOtherLeave(data.current.container, done);
+        } else {
+          animationFadeLeave(data.current.container, done, getSkipBorder(data));
+        }
       },
       enter(data) {
         reinitPlugins();
-        animationFadeEnter(data.next.container);
+        gsap.set(data.next.container, { opacity: 0, zIndex: 2 });
+        gsap.to(data.next.container, {
+          opacity: 1,
+          duration: 1,
+          delay: 1,
+          ease: "power2.out",
+        });
       },
     },
     {
@@ -336,7 +364,7 @@ barba.init({
         const done = this.async();
         // Use fade out if coming from contact page
         if (data.current.namespace === "contact") {
-          animationFadeLeave(data.current.container, done);
+          animationSimpleFadeLeave(data.current.container, done);
         } else {
           animationOtherToWorkLeave(data.current.container, done);
         }
@@ -389,18 +417,16 @@ barba.init({
 
       leave(data) {
         const done = this.async();
-        const skipBorder =
-          data.current.container.querySelector(".top") &&
-          data.next.container.querySelector(".top");
-        animationFadeLeave(data.current.container, done, skipBorder);
+        if (data.current.namespace === "contact") {
+          animationSimpleFadeLeave(data.current.container, done);
+        } else {
+          animationFadeLeave(data.current.container, done, getSkipBorder(data));
+        }
       },
 
       enter(data) {
         reinitPlugins();
-        const skipBorder =
-          data.current.container.querySelector(".top") &&
-          data.next.container.querySelector(".top");
-        animationFadeEnter(data.next.container, skipBorder);
+        animationFadeEnter(data.next.container, getSkipBorder(data));
       },
     },
   ],

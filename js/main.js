@@ -182,7 +182,16 @@ const initChat = () => {
 
   if (!form || !chatMessages) return;
 
-  // The initial entrance animation is now fully handled by Barba.js via getOtherTimeline()
+  // Reveal the initial static messages with a fade up effect
+  const initialMessages = chatMessages.querySelectorAll(".chat-message");
+  gsap.to(initialMessages, {
+    opacity: 1,
+    y: 0,
+    duration: 0.8,
+    stagger: 0.2,
+    ease: "power2.out",
+    delay: 1, // Wait briefly for the page's overall fade-in to begin
+  });
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();

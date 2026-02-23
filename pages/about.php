@@ -33,7 +33,7 @@ get_header();
         </div>
           <div class="social-link  flex align-center gap-xs">
 
-          <a class="scramble fs-xs text-light" href="#">dribble </a>
+          <a class="scramble fs-xs text-light" href="#">Github </a>
           <svg class="icon" viewBox="0 0 9 9"  xmlns="http://www.w3.org/2000/svg">
             <path d="M6.68067 2.276L0.942667 8.014L0 7.07133L5.738 1.33333H0.68V0H8.01333V7.33333H6.68L6.68067 2.276Z" />
           </svg>

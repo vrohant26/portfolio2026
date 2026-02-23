@@ -1,10 +1,10 @@
 /*
-Theme Name: minimal portfolio
+Theme Name: Rohant's portfolio 2026
 Theme URI: 
 Author: Rohant
 Author URI: 
 Description: minimalist portfolio theme
-Version: 1.0.1
+Version: 1.0.2
 Text Domain: custom-portfolio
 */
 
@@ -16,28 +16,11 @@ Text Domain: custom-portfolio
 @import url(./assets/fonts/Nippo-Regular.woff2);
 @import url(./assets/fonts/Nippo-Extralight.woff2);
 
-/* Remove all default link styles */
-a,
-a:visited,
-a:hover,
-a:active,
-a:focus {
-    color: inherit !important;
-    text-decoration: none !important;
-    background: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
 
-/* Optional: reset transition and font weight if Elementor adds them */
-a {
-    transition: none !important;
-    font-weight: inherit !important;
-}
 
 :root {
-    --light: #EAEAEA;
-    --dark: #080808;
+    --light: #ffffff;
+    --dark: #101010;
     --gray-500: #5f5f5f;
     --gray-300: #3f3f3f;
     --gray-100: #232323;
@@ -56,8 +39,8 @@ a {
 
 
 .light-mode {
-    --light: #171717;
-    --dark: #ffffff;
+    --light: var(--dark);
+    --dark: var(--light);
     --gray-500: #b2b2b2;
     --gray-300: #DBDBDB;
     --gray-100: #d6d5d5;
@@ -71,6 +54,7 @@ a {
     box-sizing: border-box;
     scrollbar-width: none;
     -ms-overflow-style: none;
+
 }
 
 *::-webkit-scrollbar {
@@ -86,7 +70,25 @@ body {
     color: var(--light);
     transition: background-color 0.3s ease, color 0.3s ease;
     letter-spacing: 0.05em;
+}
 
+/* Remove all default link styles */
+a,
+a:visited,
+a:hover,
+a:active,
+a:focus {
+    color: inherit !important;
+    text-decoration: none !important;
+    background: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Optional: reset transition and font weight if Elementor adds them */
+a {
+    transition: none !important;
+    font-weight: inherit !important;
 }
 
 .text-center {
@@ -290,7 +292,7 @@ svg {
 }
 
 .logo svg {
-    width: 30px !important;
+    width: 40px !important;
 }
 
 ul {
