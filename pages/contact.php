@@ -4,9 +4,7 @@ Template Name:  Contact page
 */
 get_header();
 ?>
-<script>
-    window.themeUri = "<?php echo get_template_directory_uri(); ?>";
-</script>
+
 
   <section class="contact-chat fs-xs h-full flex align-center justify-center p-md">
     <div class="chat-container">

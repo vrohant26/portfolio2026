@@ -76,7 +76,9 @@ const initScramble = () => {
 };
 
 const initSwiper = () => {
-  if (document.querySelector(".mySwiper")) {
+  const swiperEl = document.querySelector(".mySwiper");
+  // Check if it exists and hasn't been initialized yet
+  if (swiperEl && !swiperEl.classList.contains("swiper-initialized")) {
     new Swiper(".mySwiper", {
       direction: "horizontal",
       spaceBetween: 180,
@@ -101,10 +103,10 @@ const initGrained = () => {
       animate: true,
       patternWidth: 500,
       patternHeight: 500,
-      grainOpacity: 0.05,
-      grainDensity: 8.05,
-      grainWidth: 10,
-      grainHeight: 1.89,
+      grainOpacity: 0.07,
+      grainDensity: 1,
+      grainWidth: 1.1,
+      grainHeight: 1.1,
     };
     if (typeof window.grained === "function") {
       window.grained("#grained-container", options);
@@ -180,18 +182,7 @@ const initChat = () => {
 
   if (!form || !chatMessages) return;
 
-  // Initial animation for existing messages
-  const initialMessages = chatMessages.querySelectorAll(".chat-message");
-  if (initialMessages.length) {
-    gsap.to(initialMessages, {
-      opacity: 1,
-      y: 0,
-      duration: 0.6,
-      stagger: 0.8, // delay between user and bot message
-      delay: 0.5,
-      ease: "power2.out",
-    });
-  }
+  // The initial entrance animation is now fully handled by Barba.js via getOtherTimeline()
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -204,9 +195,10 @@ const initChat = () => {
       const typingMsg = document.createElement("div");
       typingMsg.className =
         "chat-message bot flex align-end gap-sm typing-container";
+      const themePath = window.themeData?.themeUri || window.themeUri || "";
       typingMsg.innerHTML = `
           <div class="avatar" style="margin-bottom: -10px;">
-             <img src="${window.themeUri || ""}/assets/images/avatar.png" alt="Avatar">
+             <img src="${themePath}/assets/images/avatar.png" alt="Avatar">
           </div>
           <div class="bubble bot-bubble">
               <div class="typing-dots">
@@ -228,9 +220,10 @@ const initChat = () => {
         typingMsg.remove();
         const msg = document.createElement("div");
         msg.className = "chat-message bot flex align-end gap-sm";
+        const themePath = window.themeData?.themeUri || window.themeUri || "";
         msg.innerHTML = `
           <div class="avatar" style="margin-bottom: -10px;">
-             <img src="${window.themeUri || ""}/assets/images/avatar.png" alt="Avatar">
+             <img src="${themePath}/assets/images/avatar.png" alt="Avatar">
           </div>
           <div class="bubble bot-bubble">${text}</div>
         `;
@@ -279,6 +272,31 @@ const initChat = () => {
   });
 };
 
+const initInteractionSounds = () => {
+  const themePath = window.themeData?.themeUri || window.themeUri || "";
+  const audio = new Audio(`${themePath}/assets/sound/click_002.ogg`);
+  audio.load();
+
+  const playSound = () => {
+    audio.currentTime = 0;
+    audio.play().catch((err) => {
+      // Browser might block audio until first interaction
+      console.warn("Sound play failed:", err);
+    });
+  };
+
+  document.addEventListener("click", (e) => {
+    const target = e.target.closest(
+      "a, button, .filter-btn, .project-card-item, #theme-toggle, .send-btn, .cursor-pointer",
+    );
+    if (target) {
+      playSound();
+    }
+  });
+
+  // Also trigger for swiper navigation if any (though click on slide is covered)
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initScramble();
@@ -286,6 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initGrained();
   initArchiveFilter();
   initChat();
+  initInteractionSounds();
   setInterval(updateMumbaiTime, 1000);
   updateMumbaiTime();
 });

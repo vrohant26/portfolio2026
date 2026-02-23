@@ -5,7 +5,7 @@
  * THEME SETUP
  * --------------------------------------------------------
  */
-
+ 
 function custom_portfolio_theme_setup() {
 
     // Let WordPress manage <title>
@@ -94,6 +94,14 @@ function custom_portfolio_enqueue_scripts() {
         true
     );
 
+    wp_enqueue_script(
+        'barba-prefetch',
+        'https://unpkg.com/@barba/prefetch',
+        array('barba'),
+        null,
+        true
+    );
+
     /**
      * Main JS
      */
@@ -104,6 +112,10 @@ function custom_portfolio_enqueue_scripts() {
         filemtime(get_stylesheet_directory() . '/js/main.js'),
         true
     );
+
+    wp_localize_script('custom-portfolio-js', 'themeData', array(
+        'themeUri' => get_template_directory_uri()
+    ));
 
     /**
      * Page Transitions JS
@@ -135,6 +147,17 @@ function custom_portfolio_enqueue_scripts() {
         'https://unpkg.com/grained',
         array(),
         '1.0.0',
+        true
+    );
+
+    /**
+     * SplitType
+     */
+    wp_enqueue_script(
+        'split-type',
+        'https://unpkg.com/split-type',
+        array(),
+        '0.3.3',
         true
     );
 }

@@ -4,8 +4,8 @@
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php wp_head(); ?>
-</head>
-<body  <?php body_class(); ?> data-barba="wrapper">
+</head> 
+<body id="grained-container" <?php body_class(); ?> data-barba="wrapper">
 <?php wp_body_open(); ?>
 
 <header   class="site-header p-sm  w-full flex justify-between">
@@ -43,4 +43,3 @@
   data-barba="container" 
   data-barba-namespace="<?php echo is_front_page() ? 'work' : esc_attr( get_post_field( 'post_name', get_post() ) ); ?>">
 
-<div id="grained-container"></div>

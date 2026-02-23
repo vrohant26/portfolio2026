@@ -1,5 +1,5 @@
 <?php get_header(); ?>
-
+  
 <main id="primary" class="site-main">
     <div class="container hero">
         <?php
@@ -19,7 +19,7 @@
             endwhile;
         else :
             ?>
-            <p>No content found.</p>
+            <p class="fs-xs text-center text-gray-500">No content found.</p>
             <?php
         endif;
         ?>

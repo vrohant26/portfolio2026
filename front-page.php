@@ -1,7 +1,7 @@
 
 
 <?php get_header(); ?>
-
+ 
 <section id="work" class="h-full">
 
   <div class="swiper mySwiper">
@@ -20,15 +20,12 @@
           ?>
           <div class="swiper-slide">
             <div class="project-card-item flex direction-column gap-sm" >
+          
               <div class="project-title flex w-full justify-between">
-                <div class="flex align-center gap-xs">
- <p class="fs-xs text-light">
+              
+                <p class="fs-xs text-light">
                   <?php the_title(); ?>
                 </p >
-                <svg class="icon" viewBox="0 0 9 9"  xmlns="http://www.w3.org/2000/svg">
-<path d="M6.68067 2.276L0.942667 8.014L0 7.07133L5.738 1.33333H0.68V0H8.01333V7.33333H6.68L6.68067 2.276Z" />
-</svg>
-                </div>
                
                 <p class="fs-xs mobile-hide text-gray-500">
                   <?php 
@@ -40,7 +37,7 @@
                   ?>
                 </p>
               </div>
-
+              
                 <div class="project-card-image">
                             <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($title); ?>">
                         </div>
