@@ -114,7 +114,8 @@ function custom_portfolio_enqueue_scripts() {
     );
 
     wp_localize_script('custom-portfolio-js', 'themeData', array(
-        'themeUri' => get_template_directory_uri()
+        'themeUri' => get_template_directory_uri(),
+        'ajaxUrl' => admin_url('admin-ajax.php')
     ));
 
     /**
@@ -186,4 +187,33 @@ add_image_size('portfolio-medium', 800, 600, true);
 // Remove WP version from <head>
 remove_action('wp_head', 'wp_generator');
 
+/**
+ * --------------------------------------------------------
+ * AJAX CONTACT FORM HANDLER
+ * --------------------------------------------------------
+ */
+add_action('wp_ajax_nopriv_send_contact_email', 'handle_send_contact_email');
+add_action('wp_ajax_send_contact_email', 'handle_send_contact_email');
+
+function handle_send_contact_email() {
+    check_ajax_referer('contact_form_nonce', 'nonce');
+
+    $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+    if (empty($email) || !is_email($email)) {
+        wp_send_json_error(array('message' => 'Invalid email address.'));
+    }
+
+    $to = 'hey@rohantvillarosa.in';
+    $subject = 'New Project Inquiry from Portfolio';
+    $message = "You have a new contact inquiry.\n\nAlight... I need a website\nResponder Email: " . $email;
+    $headers = array('Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $email);
+
+    $sent = wp_mail($to, $subject, $message, $headers);
+
+    if ($sent) {
+        wp_send_json_success(array('message' => 'Email sent successfully.'));
+    } else {
+        wp_send_json_error(array('message' => 'Failed to send email.'));
+    }
+}
 

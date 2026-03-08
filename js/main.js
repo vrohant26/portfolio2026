@@ -276,8 +276,43 @@ const initChat = () => {
       behavior: "smooth",
     });
 
-    // 2. Success Bot Response
-    botRespond("Got it. Keep an eye on your inbox 👀", 2000);
+    // 2. Make AJAX request to send email
+    const ajaxUrl =
+      window.themeData?.ajaxUrl || window.themeUri + "/wp-admin/admin-ajax.php";
+    const nonce = document.getElementById("contact-nonce")
+      ? document.getElementById("contact-nonce").value
+      : "";
+
+    const formData = new URLSearchParams();
+    formData.append("action", "send_contact_email");
+    formData.append("email", email);
+    formData.append("nonce", nonce);
+
+    fetch(ajaxUrl, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          botRespond("Got it. Keep an eye on your inbox 👀", 2000);
+        } else {
+          botRespond(
+            "Oops, something went wrong submitting that. Try again later?",
+            2000,
+          );
+        }
+      })
+      .catch((error) => {
+        botRespond(
+          "Oops, something went wrong on our end. Try again later?",
+          2000,
+        );
+        console.error(error);
+      });
   });
 };
 

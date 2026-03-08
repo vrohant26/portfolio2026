@@ -28,6 +28,7 @@ get_header();
       </div>
 
       <form id="contact-form" class="chat-input-wrapper flex align-center p-xs" novalidate>
+        <input type="hidden" id="contact-nonce" value="<?php echo wp_create_nonce('contact_form_nonce'); ?>">
         <input type="email" id="user-email" placeholder="Email..." required class="w-full">
         <button type="submit" class="send-btn">
            <svg width="20" height="20" viewBox="0 0 20 20"  xmlns="http://www.w3.org/2000/svg">
