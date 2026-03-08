@@ -29,22 +29,6 @@ const getWorkTimeline = (container) => {
   const tl = gsap.timeline({ paused: true });
 
   const swiperSlides = container.querySelectorAll(".project-card-item");
-  const briefText = container.querySelector(".brief p");
-
-  let briefLines = [];
-  if (briefText && typeof SplitType !== "undefined") {
-    const split = new SplitType(briefText, { types: "lines" });
-    split.lines.forEach((line) => {
-      const wrapper = document.createElement("div");
-      wrapper.style.overflow = "hidden";
-      wrapper.style.display = "block";
-      line.parentNode.insertBefore(wrapper, line);
-      wrapper.appendChild(line);
-    });
-    briefLines = split.lines;
-  } else if (briefText) {
-    briefLines = [briefText];
-  }
 
   if (swiperSlides.length > 0) {
     tl.to(
@@ -59,19 +43,6 @@ const getWorkTimeline = (container) => {
     );
   }
 
-  if (briefLines.length > 0) {
-    tl.to(
-      briefLines,
-      {
-        yPercent: 100,
-        duration: 2,
-        stagger: 0.09,
-        ease: "expo.inOut",
-      },
-      "-=2.5",
-    );
-  }
-
   return tl;
 };
 
@@ -79,7 +50,7 @@ const getOtherTimeline = (container, skipBorder = false) => {
   const tl = gsap.timeline({ paused: true });
 
   const paragraphsAndHeaders = container.querySelectorAll(
-    "h1, h2, h3, h4, h5, h6, p:not(.brief p)",
+    "h1, h2, h3, h4, h5, h6, p",
   );
   let lineTargets = [];
 
@@ -96,11 +67,12 @@ const getOtherTimeline = (container, skipBorder = false) => {
   }
 
   const otherElementsNodes = container.querySelectorAll(
-    "span, a:not(.logo):not(.scramble), ul li, img, .project-card-item, .archive-item, .chat-message, .chat-input-wrapper, .social-link",
+    "span, a:not(.logo):not(.scramble), ul li, img, .name-svg svg, .project-card-item, .archive-item, .chat-message, .chat-input-wrapper, .social-link",
   );
 
   const otherElements = Array.from(otherElementsNodes).filter((el) => {
     if (el.closest("h1, h2, h3, h4, h5, h6, p")) return false;
+    if (el.tagName.toLowerCase() === "svg") return true;
     return !Array.from(otherElementsNodes).some(
       (otherEl) => otherEl !== el && otherEl.contains(el),
     );
@@ -122,6 +94,11 @@ const getOtherTimeline = (container, skipBorder = false) => {
 
     wrappedElements.push(el);
 
+    // Skip creating a wrapper for .name-svg svg since its parent is already overflow-hidden
+    if (el.tagName.toLowerCase() === "svg" && el.closest(".name-svg")) {
+      return;
+    }
+
     if (
       !el.parentNode.classList ||
       !el.parentNode.classList.contains("overflow-wrapper")
@@ -141,7 +118,7 @@ const getOtherTimeline = (container, skipBorder = false) => {
   if (wrappedElements.length > 0) {
     tl.fromTo(
       wrappedElements,
-      { yPercent: 120 },
+      { yPercent: 150 },
       {
         yPercent: 0,
         stagger: 0.05,
@@ -155,7 +132,7 @@ const getOtherTimeline = (container, skipBorder = false) => {
   if (unwrappedElements.length > 0) {
     tl.fromTo(
       unwrappedElements,
-      { yPercent: 120 },
+      { yPercent: 150 },
       {
         yPercent: 0,
         stagger: 0.05,
@@ -243,7 +220,7 @@ const animationOtherToWorkLeave = (container, done) => {
 };
 
 const animationOtherToWorkEnter = (container) => {
-  gsap.set(container, { opacity: 1, zIndex: 2 });
+  // gsap.set(container, { opacity: 1, zIndex: 2 });
   if (typeof initSwiper === "function") initSwiper();
 
   const tl = getWorkTimeline(container);
@@ -321,7 +298,7 @@ barba.init({
   debug: true,
   views: [
     {
-      namespace: "work",
+      namespace: "featured-work",
       afterEnter() {
         if (typeof initSwiper === "function") initSwiper();
       },
@@ -337,7 +314,7 @@ barba.init({
       },
       leave(data) {
         const done = this.async();
-        if (data.current.namespace === "work") {
+        if (data.current.namespace === "featured-work") {
           animationWorkToOtherLeave(data.current.container, done);
         } else {
           animationFadeLeave(data.current.container, done, getSkipBorder(data));
@@ -358,7 +335,7 @@ barba.init({
       name: "other-to-work-transition",
       sync: true,
       to: {
-        namespace: ["work"],
+        namespace: ["featured-work"],
       },
       leave(data) {
         const done = this.async();
@@ -378,7 +355,7 @@ barba.init({
       name: "work-to-other-transition",
       sync: true,
       from: {
-        namespace: ["work"],
+        namespace: ["featured-work"],
       },
       leave(data) {
         const done = this.async();

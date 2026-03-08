@@ -2,65 +2,18 @@
 
 <?php get_header(); ?>
  
-<section id="work" class="h-full">
+<section id="home" class="h-full flex direction-column justify-end p-sm">
 
-  <div class="swiper mySwiper">
-    <div class="swiper-wrapper">
-      <?php
-      $args = array(
-        'post_type' => 'project',
-        'posts_per_page' => -1,
-        'post_status' => 'publish',
-      );
-      $project_query = new WP_Query($args);
-      
-      if ($project_query->have_posts()) :
-        while ($project_query->have_posts()) : $project_query->the_post();
-          $image = get_the_post_thumbnail_url(get_the_ID(), 'large');
-          ?>
-          <div class="swiper-slide">
-            <div class="project-card-item flex direction-column gap-sm" >
-          
-              <div class="project-title flex w-full justify-between">
-              
-                <p class="fs-xs text-light">
-                  <?php the_title(); ?>
-                </p >
-               
-                <p class="fs-xs mobile-hide text-gray-500">
-                  <?php 
-                  $tags = get_the_tags();
-                  if ($tags) {
-                      $tag_names = wp_list_pluck($tags, 'name');
-                      echo esc_html(implode(', ', $tag_names));
-                  }
-                  ?>
-                </p>
-              </div>
-              
-                <div class="project-card-image">
-                            <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($title); ?>">
-                        </div>
-            </div>
-          </div>
-          <?php
-        endwhile;
-        wp_reset_postdata();
-      else :
-        ?>
-        <div class="swiper-slide">
-          <div class="project-card-item flex align-center justify-center">
-            <p class="fs-sm">No projects found</p>
-          </div>
-        </div>
-      <?php endif; ?>
-    </div>
-
+  <div class="bottom flex direction-column gap-md justify-end mb-lg">
+    <div class="brief">
+    <p class="fs-xs text-gray-500">I’m a creative developer and designer.<br> I build websites and fix what’s broken <br> (usually before anyone notices).</p>
+  </div>
+  <div class="name-svg overflow-hidden">
+   <svg  viewBox="0 0 1410 102"  xmlns="http://www.w3.org/2000/svg">
+<path d="M28.8911 101.119H-0.000154211V-0.000115226H64.5717L80.3174 15.7456V49.115L70.061 59.3713L80.8953 70.2055V101.119H52.004V74.3948L48.826 71.2167H28.8911V101.119ZM51.4262 44.9257V23.1129H28.8911V48.1038H48.2482L51.4262 44.9257ZM166.314 101.119H112.576L96.8306 85.3734V15.7456L112.576 -0.000115226H166.314L182.06 15.7456V85.3734L166.314 101.119ZM125.722 26.002V75.117H153.168V26.002H125.722ZM201.589 101.119V-0.000115226H230.481V37.8474H260.816V-0.000115226H289.708V101.119H260.816V62.4049H230.481V101.119H201.589ZM332.977 101.119H304.086V81.4731L329.51 -0.000115226H369.669L395.093 81.3287V101.119H366.202V84.6511L365.335 81.1842H333.843L332.977 84.6511V101.119ZM349.589 22.8239L338.899 58.0712H360.279L349.589 22.8239ZM437.552 101.119H409.527V-0.000115226H437.552V12.5676L472.943 52.293C472.221 45.5036 471.643 36.2584 471.643 30.3357V-0.000115226H499.668V101.119H471.643V88.5515L436.252 48.826C436.974 55.6155 437.552 64.8607 437.552 70.7834V101.119ZM514.139 26.002V-0.000115226H592.146V26.002H567.588V101.119H538.697V26.002H514.139ZM626.855 19.5015V-0.000115226H655.746V18.4903L671.636 72.6613L687.526 18.4903V-0.000115226H716.417V19.7904L690.271 101.119H653.001L626.855 19.5015ZM730.885 101.119V-0.000115226H759.777V101.119H730.885ZM847.946 101.119H782.94V-0.000115226H811.832V75.117H847.946V101.119ZM921.584 101.119H856.579V-0.000115226H885.47V75.117H921.584V101.119ZM956.226 101.119H927.334V81.4731L952.759 -0.000115226H992.917L1018.34 81.3287V101.119H989.451V84.6511L988.584 81.1842H957.092L956.226 84.6511V101.119ZM972.838 22.8239L962.148 58.0712H983.528L972.838 22.8239ZM1061.67 101.119H1032.78V-0.000115226H1097.35L1113.09 15.7456V49.115L1102.84 59.3713L1113.67 70.2055V101.119H1084.78V74.3948L1081.6 71.2167H1061.67V101.119ZM1084.2 44.9257V23.1129H1061.67V48.1038H1081.02L1084.2 44.9257ZM1199.09 101.119H1145.35L1129.61 85.3734V15.7456L1145.35 -0.000115226H1199.09L1214.84 15.7456V85.3734L1199.09 101.119ZM1158.5 26.002V75.117H1185.94V26.002H1158.5ZM1292.44 101.119H1245.78L1230.03 85.3734V68.6165H1258.06V78.0062H1280.16V62.116H1245.92L1230.18 46.3703V15.7456L1245.92 -0.000115226H1291.28L1307.03 15.7456V32.647H1279V23.1129H1258.2V39.003H1292.44L1308.18 54.7487V85.3734L1292.44 101.119ZM1347.13 101.119H1318.24V81.4731L1343.66 -0.000115226H1383.82L1409.25 81.3287V101.119H1380.36V84.6511L1379.49 81.1842H1348L1347.13 84.6511V101.119ZM1363.74 22.8239L1353.05 58.0712H1374.43L1363.74 22.8239Z" />
+</svg>
   </div>
 
-  <div class="brief">
-    <p class="fs-xs text-gray-500">Hey, I’m Rohant Villarosa, a creative developer and designer. I build websites and fix what’s broken (usually before anyone notices).</p>
-  </div>
 
 </section>
 

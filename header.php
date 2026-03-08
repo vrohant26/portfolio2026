@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php wp_head(); ?>
 </head> 
+
 <body id="grained-container" <?php body_class(); ?> data-barba="wrapper">
 <?php wp_body_open(); ?>
 
@@ -16,7 +17,7 @@
     </a>
       <nav class="fs-xs text-gray-500">
         <ul class="flex direction-column">
-            <li><a class="scramble" href="<?php echo esc_url( home_url( '/' ) ); ?>">Work</a></li>
+            <li><a class="scramble" href="<?php echo esc_url( home_url( '/featured-work' ) ); ?>">Work</a></li>
             <li><a class="scramble" href="<?php echo esc_url( home_url( '/about' ) ); ?>">About</a></li>
             <li><a class="scramble" href="<?php echo esc_url( home_url( '/archive' ) ); ?>">Archive</a></li>
             <li><a class="scramble" href="<?php echo esc_url( home_url( '/insights' ) ); ?>">Insights</a></li>
