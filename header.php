@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
+    <link rel="icon" type="image/x-icon" href="<?php echo get_template_directory_uri(); ?>/assets/images/favico.ico">
     <meta charset="<?php bloginfo( 'charset' ); ?>">
+    <title>Creative Developer & Designer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php wp_head(); ?>
 </head> 
