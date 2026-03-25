@@ -45,7 +45,7 @@
         }
     </style>
 </head>
-<body <?php body_class(); ?>>
+<body id="grained-container" <?php body_class(); ?>>
     
     <div class="coming-soon-container">
         <h1>Coming Soon.</h1>
