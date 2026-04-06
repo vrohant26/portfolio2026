@@ -199,13 +199,22 @@ const initChat = () => {
     const email = emailInput.value.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    // helper to add bot message with typing indicator
-    const botRespond = (text, delay = 1500) => {
-      const typingMsg = document.createElement("div");
-      typingMsg.className =
-        "chat-message bot flex align-end gap-sm typing-container";
-      const themePath = window.themeData?.themeUri || window.themeUri || "";
-      typingMsg.innerHTML = `
+  const scrollToBottom = () => {
+    requestAnimationFrame(() => {
+      chatMessages.scrollTo({
+        top: chatMessages.scrollHeight,
+        behavior: "smooth",
+      });
+    });
+  };
+
+  // helper to add bot message with typing indicator
+  const botRespond = (text, delay = 1500) => {
+    const typingMsg = document.createElement("div");
+    typingMsg.className =
+      "chat-message bot flex align-end gap-sm typing-container";
+    const themePath = window.themeData?.themeUri || window.themeUri || "";
+    typingMsg.innerHTML = `
           <div class="avatar" style="margin-bottom: -10px;">
              <img src="${themePath}/assets/images/avatar.png" alt="Avatar">
           </div>
@@ -217,15 +226,12 @@ const initChat = () => {
               </div>
           </div>
       `;
-      chatMessages.appendChild(typingMsg);
-      gsap.to(typingMsg, { opacity: 1, y: 0, duration: 0.4 });
+    chatMessages.appendChild(typingMsg);
+    gsap.to(typingMsg, { opacity: 1, y: 0, duration: 0.4 });
 
-      chatMessages.scrollTo({
-        top: chatMessages.scrollHeight,
-        behavior: "smooth",
-      });
+    scrollToBottom();
 
-      setTimeout(() => {
+    setTimeout(() => {
         typingMsg.remove();
         const msg = document.createElement("div");
         msg.className = "chat-message bot flex align-end gap-sm";
@@ -238,10 +244,7 @@ const initChat = () => {
         `;
         chatMessages.appendChild(msg);
         gsap.to(msg, { opacity: 1, y: 0, duration: 0.4 });
-        chatMessages.scrollTo({
-          top: chatMessages.scrollHeight,
-          behavior: "smooth",
-        });
+        scrollToBottom();
       }, delay);
     };
 
@@ -271,10 +274,9 @@ const initChat = () => {
     // Clear and scroll
     emailInput.value = "";
     emailInput.blur();
-    chatMessages.scrollTo({
-      top: chatMessages.scrollHeight,
-      behavior: "smooth",
-    });
+
+    // Use a slight timeout to wait for keyboard dismissal or layout shift
+    setTimeout(scrollToBottom, 100);
 
     // 2. Make AJAX request to send email
     const ajaxUrl =

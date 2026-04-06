@@ -607,12 +607,11 @@ img {
 #chat-messages {
     padding-bottom: 1rem;
     flex: 1;
-    height: 200px;
-    /* overflow-y: auto; */
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     scrollbar-width: none;
-
+    min-height: 0;
 }
 
 #chat-messages::-webkit-scrollbar {
