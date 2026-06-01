@@ -21,7 +21,7 @@
         <ul class="flex direction-column">
             <li><a class="scramble" href="<?php echo esc_url( home_url( '/featured-work' ) ); ?>">Work</a></li>
             <li><a class="scramble" href="<?php echo esc_url( home_url( '/about' ) ); ?>">About</a></li>
-            <li><a class="scramble" href="<?php echo esc_url( home_url( '/archive' ) ); ?>">Archive</a></li>
+            <li><a class="scramble" href="<?php echo esc_url( home_url( '/archive' ) ); ?>">Extras</a></li>
             <li><a class="scramble" href="<?php echo esc_url( home_url( '/insights' ) ); ?>">Insights</a></li>
         </ul>
       </nav>

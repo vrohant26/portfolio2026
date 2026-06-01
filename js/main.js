@@ -79,6 +79,38 @@ const initSwiper = () => {
   const swiperEl = document.querySelector(".mySwiper");
   // Check if it exists and hasn't been initialized yet
   if (swiperEl && !swiperEl.classList.contains("swiper-initialized")) {
+    let slideshowInterval;
+
+    const startSlideshow = (slideEl) => {
+      clearInterval(slideshowInterval);
+      if (!slideEl) return;
+      const container = slideEl.querySelector("[data-slideshow]");
+      if (!container) return;
+      const mediaElements = container.querySelectorAll(".slideshow-media");
+      if (mediaElements.length <= 1) return;
+
+      let currentIndex = 0;
+      mediaElements.forEach((el, i) => {
+        el.style.display = i === 0 ? "block" : "none";
+      });
+
+      slideshowInterval = setInterval(() => {
+        mediaElements[currentIndex].style.display = "none";
+        currentIndex = (currentIndex + 1) % mediaElements.length;
+        mediaElements[currentIndex].style.display = "block";
+      }, 700);
+    };
+
+    const stopSlideshow = (slideEl) => {
+      if (!slideEl) return;
+      const container = slideEl.querySelector("[data-slideshow]");
+      if (!container) return;
+      const mediaElements = container.querySelectorAll(".slideshow-media");
+      mediaElements.forEach((el, i) => {
+        el.style.display = i === 0 ? "block" : "none";
+      });
+    };
+
     new Swiper(".mySwiper", {
       direction: "horizontal",
       spaceBetween: 180,
@@ -90,6 +122,19 @@ const initSwiper = () => {
       breakpoints: {
         768: {
           spaceBetween: 120,
+        },
+      },
+      on: {
+        init: function () {
+          if (this.slides && this.slides.length > 0) {
+            startSlideshow(this.slides[this.activeIndex]);
+          }
+        },
+        slideChangeTransitionStart: function () {
+          this.slides.forEach((slide) => stopSlideshow(slide));
+        },
+        slideChangeTransitionEnd: function () {
+          startSlideshow(this.slides[this.activeIndex]);
         },
       },
     });
@@ -199,22 +244,22 @@ const initChat = () => {
     const email = emailInput.value.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const scrollToBottom = () => {
-    requestAnimationFrame(() => {
-      chatMessages.scrollTo({
-        top: chatMessages.scrollHeight,
-        behavior: "smooth",
+    const scrollToBottom = () => {
+      requestAnimationFrame(() => {
+        chatMessages.scrollTo({
+          top: chatMessages.scrollHeight,
+          behavior: "smooth",
+        });
       });
-    });
-  };
+    };
 
-  // helper to add bot message with typing indicator
-  const botRespond = (text, delay = 1500) => {
-    const typingMsg = document.createElement("div");
-    typingMsg.className =
-      "chat-message bot flex align-end gap-sm typing-container";
-    const themePath = window.themeData?.themeUri || window.themeUri || "";
-    typingMsg.innerHTML = `
+    // helper to add bot message with typing indicator
+    const botRespond = (text, delay = 1500) => {
+      const typingMsg = document.createElement("div");
+      typingMsg.className =
+        "chat-message bot flex align-end gap-sm typing-container";
+      const themePath = window.themeData?.themeUri || window.themeUri || "";
+      typingMsg.innerHTML = `
           <div class="avatar" style="margin-bottom: -10px;">
              <img src="${themePath}/assets/images/avatar.png" alt="Avatar">
           </div>
@@ -226,12 +271,12 @@ const initChat = () => {
               </div>
           </div>
       `;
-    chatMessages.appendChild(typingMsg);
-    gsap.to(typingMsg, { opacity: 1, y: 0, duration: 0.4 });
+      chatMessages.appendChild(typingMsg);
+      gsap.to(typingMsg, { opacity: 1, y: 0, duration: 0.4 });
 
-    scrollToBottom();
+      scrollToBottom();
 
-    setTimeout(() => {
+      setTimeout(() => {
         typingMsg.remove();
         const msg = document.createElement("div");
         msg.className = "chat-message bot flex align-end gap-sm";

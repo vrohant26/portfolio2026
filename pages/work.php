@@ -24,7 +24,7 @@ get_header();
           $image = get_the_post_thumbnail_url(get_the_ID(), 'large');
           ?>
           <div class="swiper-slide">
-            <div class="project-card-item flex direction-column gap-sm" >
+            <a href="<?php the_permalink(); ?>" class="project-card-item flex direction-column gap-sm" style="text-decoration: none;">
           
               <div class="project-title flex w-full justify-between">
               
@@ -43,10 +43,39 @@ get_header();
                 </p>
               </div>
               
-                <div class="project-card-image">
-                            <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($title); ?>">
-                        </div>
-            </div>
+                <div class="project-card-image" data-slideshow>
+                  <?php
+                  $media_items = [];
+                  if ($image) {
+                      $media_items[] = array('url' => $image, 'type' => 'image');
+                  }
+                  $previews = get_post_meta(get_the_ID(), '_project_previews', true);
+                  if (!is_array($previews)) {
+                      $previews = [];
+                      for ($i = 1; $i <= 4; $i++) {
+                          $val = get_post_meta(get_the_ID(), '_project_preview_' . $i, true);
+                          if ($val) $previews[] = $val;
+                      }
+                  }
+                  if (is_array($previews)) {
+                      foreach ($previews as $preview_id) {
+                          if ($preview_id) {
+                              $preview_url = wp_get_attachment_url($preview_id);
+                              $mime_type = get_post_mime_type($preview_id);
+                              $is_video = strpos($mime_type, 'video') === 0;
+                              if (!$is_video) {
+                                  $media_items[] = array('url' => $preview_url, 'type' => 'image');
+                              }
+                          }
+                      }
+                  }
+                  ?>
+                  <?php foreach ($media_items as $index => $media) : ?>
+                      <?php $style = $index === 0 ? 'display: block;' : 'display: none;'; ?>
+                      <img src="<?php echo esc_url($media['url']); ?>" class="slideshow-media" style="<?php echo $style; ?> width: 100%; height: 100%; object-fit: cover;" alt="<?php the_title_attribute(); ?>">
+                  <?php endforeach; ?>
+                </div>
+            </a>
           </div>
           <?php
         endwhile;

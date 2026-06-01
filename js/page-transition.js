@@ -67,7 +67,7 @@ const getOtherTimeline = (container, skipBorder = false) => {
   }
 
   const otherElementsNodes = container.querySelectorAll(
-    "span, a:not(.logo):not(.scramble), ul li, img, .name-svg svg, .project-card-item, .archive-item, .chat-message, .chat-input-wrapper, .social-link",
+    "span, a:not(.logo):not(.scramble), ul li, img, .name-svg svg, .project-card-item, .archive-item, .chat-message, .chat-input-wrapper, .social-link, .anim-translate",
   );
 
   const otherElements = Array.from(otherElementsNodes).filter((el) => {
@@ -278,9 +278,20 @@ const animationFadeEnter = (container, skipBorder = false) => {
    Barba Init
    ========================================================================== */
 
-const getSkipBorder = (data) =>
-  data.current.container.querySelector(".top") &&
-  data.next.container.querySelector(".top");
+const getSkipBorder = (data) => {
+  const isCurrentSingle =
+    data.current.container.querySelector("#single-project");
+  const isNextSingle = data.next.container.querySelector("#single-project");
+
+  if (isCurrentSingle || isNextSingle) {
+    return false;
+  }
+
+  return (
+    data.current.container.querySelector(".top") &&
+    data.next.container.querySelector(".top")
+  );
+};
 
 barba.hooks.before(() => {
   document.body.style.pointerEvents = "none";
@@ -339,8 +350,10 @@ barba.init({
       },
       leave(data) {
         const done = this.async();
-        // Use fade out if coming from contact page
-        if (data.current.namespace === "contact") {
+        const isFromSingle =
+          data.current.container.querySelector("#single-project");
+        // Use fade out if coming from contact page or single project
+        if (data.current.namespace === "contact" || isFromSingle) {
           animationSimpleFadeLeave(data.current.container, done);
         } else {
           animationOtherToWorkLeave(data.current.container, done);
@@ -348,7 +361,20 @@ barba.init({
       },
       enter(data) {
         reinitPlugins();
-        animationOtherToWorkEnter(data.next.container);
+        const isFromSingle =
+          data.current.container.querySelector("#single-project");
+        if (isFromSingle) {
+          gsap.set(data.next.container, { opacity: 0, zIndex: 2 });
+          if (typeof initSwiper === "function") initSwiper();
+          gsap.to(data.next.container, {
+            opacity: 1,
+            duration: 0.5,
+            delay: 0.2,
+            ease: "power2.out",
+          });
+        } else {
+          animationOtherToWorkEnter(data.next.container);
+        }
       },
     },
     {

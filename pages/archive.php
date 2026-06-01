@@ -66,7 +66,12 @@ get_header();
                 $term_slugs = implode(' ', wp_list_pluck($post_terms, 'slug'));
             }
             ?>
-            <div class="archive-item flex direction-column  <?php echo esc_attr($term_slugs); ?>" data-category="<?php echo esc_attr($term_slugs); ?>">
+            <?php
+            $archive_url = get_post_meta(get_the_ID(), '_archive_url', true);
+            $tag = $archive_url ? 'a' : 'div';
+            $href = $archive_url ? 'href="' . esc_url($archive_url) . '" target="_blank" rel="noopener noreferrer"' : '';
+            ?>
+            <<?php echo $tag; ?> <?php echo $href; ?> class="archive-item flex direction-column  <?php echo esc_attr($term_slugs); ?>" data-category="<?php echo esc_attr($term_slugs); ?>" style="display: block;">
               <div class="archive-image mb-sm flex justify-center align-end">
                 <?php if ($image) : ?>
                   <img src="<?php echo esc_url($image); ?>" alt="<?php the_title_attribute(); ?>">
@@ -79,7 +84,7 @@ get_header();
                  <span class="fs-xs text-gray-500 text-nowrap">[ <?php echo str_pad($count, 2, '0', STR_PAD_LEFT); ?> ]</span>
               </div>
                <p class="fs-xs text-gray-500"><?php echo esc_html($term_slugs);?></p>
-            </div>
+            </<?php echo $tag; ?>>
             <?php
             $count++;
             endwhile;
