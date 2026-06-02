@@ -185,15 +185,22 @@ const initArchiveFilter = () => {
           y: 10,
           ease: "power2.in",
           onComplete: () => {
-            // Filter items
             items.forEach((item) => {
+              const hasWrapper = item.parentElement && item.parentElement.classList.contains('overflow-wrapper');
+              const targetEl = hasWrapper ? item.parentElement : item;
+              
               if (
                 filterValue === "all" ||
                 item.classList.contains(filterValue)
               ) {
-                item.style.display = "flex";
+                if (hasWrapper) {
+                  targetEl.style.display = "block";
+                  item.style.display = "flex";
+                } else {
+                  targetEl.style.display = "flex";
+                }
               } else {
-                item.style.display = "none";
+                targetEl.style.display = "none";
               }
             });
 
@@ -209,10 +216,18 @@ const initArchiveFilter = () => {
       } else {
         // Fallback without GSAP
         items.forEach((item) => {
+          const hasWrapper = item.parentElement && item.parentElement.classList.contains('overflow-wrapper');
+          const targetEl = hasWrapper ? item.parentElement : item;
+          
           if (filterValue === "all" || item.classList.contains(filterValue)) {
-            item.style.display = "flex";
+            if (hasWrapper) {
+              targetEl.style.display = "block";
+              item.style.display = "flex";
+            } else {
+              targetEl.style.display = "flex";
+            }
           } else {
-            item.style.display = "none";
+            targetEl.style.display = "none";
           }
         });
       }
