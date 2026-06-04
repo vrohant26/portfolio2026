@@ -59,6 +59,7 @@ Text Domain: custom-portfolio
     --gray-300: #3f3f3f;
     --gray-100: #232323;
     --accent: #A021F0;
+    --grandient: rgba(0, 0, 0, 1) 26%, rgba(0, 0, 0, 0) 100%;
     --xs-spacing: 0.25rem;
     --sm-spacing: 1rem;
     --md-spacing: 2rem;
@@ -78,6 +79,7 @@ Text Domain: custom-portfolio
     --gray-500: #b2b2b2;
     --gray-300: #DBDBDB;
     --gray-100: #d6d5d5;
+    --grandient: rgb(255, 255, 255) 26%, rgba(255, 255, 255, 0) 100%;
 }
 
 
@@ -805,12 +807,21 @@ img {
     transform: translateX(-50%);
 }
 
+header {
+    height: 200px;
+    background: linear-gradient(180deg, var(--grandient));
+}
+
+footer {
+    height: 80px;
+    background: linear-gradient(0deg, var(--grandient));
+}
+
+
 
 @media (width <=1024px) {
 
-    header {
-        mix-blend-mode: difference;
-    }
+
 
 
     .w-25 {

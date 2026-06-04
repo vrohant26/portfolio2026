@@ -67,7 +67,7 @@ const getOtherTimeline = (container, skipBorder = false) => {
   }
 
   const otherElementsNodes = container.querySelectorAll(
-    "span, a:not(.logo):not(.scramble), ul li, img, .name-svg svg, .project-card-item, .archive-item, .chat-message, .chat-input-wrapper, .social-link, .anim-translate",
+    "span, a:not(.logo):not(.scramble), ul li, img, video, .name-svg svg, .project-card-item, .archive-item, .chat-message, .chat-input-wrapper, .social-link, .anim-translate",
   );
 
   const otherElements = Array.from(otherElementsNodes).filter((el) => {

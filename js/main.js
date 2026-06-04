@@ -186,9 +186,11 @@ const initArchiveFilter = () => {
           ease: "power2.in",
           onComplete: () => {
             items.forEach((item) => {
-              const hasWrapper = item.parentElement && item.parentElement.classList.contains('overflow-wrapper');
+              const hasWrapper =
+                item.parentElement &&
+                item.parentElement.classList.contains("overflow-wrapper");
               const targetEl = hasWrapper ? item.parentElement : item;
-              
+
               if (
                 filterValue === "all" ||
                 item.classList.contains(filterValue)
@@ -216,9 +218,11 @@ const initArchiveFilter = () => {
       } else {
         // Fallback without GSAP
         items.forEach((item) => {
-          const hasWrapper = item.parentElement && item.parentElement.classList.contains('overflow-wrapper');
+          const hasWrapper =
+            item.parentElement &&
+            item.parentElement.classList.contains("overflow-wrapper");
           const targetEl = hasWrapper ? item.parentElement : item;
-          
+
           if (filterValue === "all" || item.classList.contains(filterValue)) {
             if (hasWrapper) {
               targetEl.style.display = "block";
