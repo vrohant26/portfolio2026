@@ -113,7 +113,7 @@ $result_bullets = get_post_meta(get_the_ID(), '_cs_result_bullets', true);
                 </div>
                 
                 <?php if ($i < count($context_steps) - 1) : ?>
-                    <div class="step-arrow text-gray-500">→</div>
+                    <div class="step-arrow text-gray-500 anim-translate">→</div>
                 <?php endif; ?>
             <?php endforeach; ?>
         </div>
@@ -122,7 +122,8 @@ $result_bullets = get_post_meta(get_the_ID(), '_cs_result_bullets', true);
     <?php endif; ?>
 
     <?php if (!empty($challenge_cards) && is_array($challenge_cards)) : ?>
-    <div class="case-study-challenge mt-xl" style="border-top: 1px solid var(--gray-300); padding-top: 3rem; margin-top: 4rem;">
+    <hr class="anim-translate" style="border: none; border-top: 1px solid var(--gray-300); margin-top: 4rem; margin-bottom: 3rem;">
+    <div class="case-study-challenge">
         <span class="fs-xs text-gray-500" style="text-transform: uppercase; letter-spacing: 1px; display: inline-block;">The Challenge</span>
         
         <div class="challenge-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
@@ -154,7 +155,8 @@ $result_bullets = get_post_meta(get_the_ID(), '_cs_result_bullets', true);
     <?php endif; ?>
 
     <?php if ($solution_desc || !empty($solution_images) || !empty($role_cards)) : ?>
-    <div class="case-study-solution mt-xl" style="border-top: 1px solid var(--gray-300); padding-top: 3rem; margin-top: 4rem;">
+    <hr class="anim-translate" style="border: none; border-top: 1px solid var(--gray-300); margin-top: 4rem; margin-bottom: 3rem;">
+    <div class="case-study-solution">
         <span class="fs-xs text-gray-500" style="text-transform: uppercase; letter-spacing: 1px; display: inline-block;">The Solution</span>
         
         <?php if ($solution_desc) : ?>
@@ -167,7 +169,7 @@ $result_bullets = get_post_meta(get_the_ID(), '_cs_result_bullets', true);
             <?php foreach ($solution_images as $img) : 
                 $layout_type = isset($img['layout_type']) ? $img['layout_type'] : '1';
             ?>
-                <div class="solution-image-container" style="margin-bottom: 3rem;">
+                <div class="solution-image-container anim-translate" style="margin-bottom: 3rem;">
                     <?php if ($img['top_caption']) : ?>
                         <div class="image-caption flex align-center gap-xs" style="background-color: #ffece0; color: #d35400; padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.8rem; width: fit-content; margin-bottom: -12px; position: relative; z-index: 2; margin-left: 1rem;">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
@@ -282,7 +284,8 @@ $result_bullets = get_post_meta(get_the_ID(), '_cs_result_bullets', true);
     <?php endif; ?>
     
     <?php if (!empty($tech_highlights) || !empty($result_stats) || $result_bullets) : ?>
-    <div class="case-study-results mt-xl" style="border-top: 1px solid var(--gray-300); padding-top: 4rem; padding-bottom: 4rem;">
+    <hr class="anim-translate" style="border: none; border-top: 1px solid var(--gray-300); margin-top: 4rem; margin-bottom: 4rem;">
+    <div class="case-study-results">
         
         <!-- Technical Highlights -->
         <?php if (!empty($tech_highlights) && is_array($tech_highlights)) : ?>

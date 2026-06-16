@@ -35,8 +35,8 @@ const getWorkTimeline = (container) => {
       swiperSlides,
       {
         y: "-100vh",
-        duration: 2,
-        stagger: 0.05,
+        duration: 1.2,
+        stagger: 0.03,
         ease: "expo.inOut",
       },
       "-=0.5",
@@ -121,8 +121,8 @@ const getOtherTimeline = (container, skipBorder = false) => {
       { yPercent: 150 },
       {
         yPercent: 0,
-        stagger: 0.05,
-        duration: 2,
+        stagger: 0.03,
+        duration: 1.2,
         ease: "expo.inOut",
       },
       "-=0.2",
@@ -135,8 +135,8 @@ const getOtherTimeline = (container, skipBorder = false) => {
       { yPercent: 150 },
       {
         yPercent: 0,
-        stagger: 0.05,
-        duration: 2,
+        stagger: 0.03,
+        duration: 1.2,
         ease: "expo.inOut",
       },
       "-=1",
@@ -149,9 +149,9 @@ const getOtherTimeline = (container, skipBorder = false) => {
       { yPercent: 100 },
       {
         yPercent: 0,
-        duration: 2,
+        duration: 1.2,
 
-        stagger: -0.05,
+        stagger: -0.03,
         ease: "expo.inOut",
       },
       0,
@@ -160,7 +160,7 @@ const getOtherTimeline = (container, skipBorder = false) => {
     tl.fromTo(
       paragraphsAndHeaders,
       { yPercent: 100 },
-      { yPercent: 0, duration: 2, delay: 0.5, ease: "expo.inOut" },
+      { yPercent: 0, duration: 1.2, delay: 0.2, ease: "expo.inOut" },
       0,
     );
   }
@@ -173,7 +173,7 @@ const getOtherTimeline = (container, skipBorder = false) => {
       {
         "--border-progress": "100%",
         opacity: 1,
-        duration: 2.5,
+        duration: 1.5,
         ease: "expo.inOut",
       },
       0,
@@ -228,8 +228,8 @@ const animationOtherToWorkEnter = (container) => {
   // Immediately put the elements in their hidden 'end' state
   tl.progress(1);
 
-  // Wait 1s before playing the reverse animation to prevent overlap
-  gsap.delayedCall(1, () => {
+  // Wait 0.5s before playing the reverse animation to prevent overlap
+  gsap.delayedCall(0.5, () => {
     tl.reverse();
   });
 };
@@ -257,19 +257,19 @@ const animationSimpleFadeLeave = (container, done) => {
   });
   gsap.to(container, {
     opacity: 0,
-    duration: 1,
+    duration: 0.5,
     ease: "power2.out",
   });
-  // Pad the transition time to exactly 2s so the container doesn't disappear early while the next page is entering
-  gsap.delayedCall(2, done);
+  // Pad the transition time so the container doesn't disappear early while the next page is entering
+  gsap.delayedCall(1, done);
 };
 
 const animationFadeEnter = (container, skipBorder = false) => {
   gsap.set(container, { opacity: 1, zIndex: 2 });
   const tl = getOtherTimeline(container, skipBorder);
 
-  // Explicitly wait 1s before playing the entrance animation, preventing overlap with the 2s exit transition
-  gsap.delayedCall(1, () => {
+  // Explicitly wait 0.8s before playing the entrance animation, preventing overlap with the long exit transition
+  gsap.delayedCall(0.8, () => {
     tl.play();
   });
 };
@@ -339,8 +339,8 @@ barba.init({
         gsap.set(data.next.container, { opacity: 0, zIndex: 2 });
         gsap.to(data.next.container, {
           opacity: 1,
-          duration: 1,
-          delay: 1,
+          duration: 0.6,
+          delay: 0.6,
           ease: "power2.out",
         });
       },
@@ -374,7 +374,7 @@ barba.init({
           gsap.to(data.next.container, {
             opacity: 1,
             duration: 0.5,
-            delay: 0.2,
+            delay: 0.1,
             ease: "power2.out",
           });
         } else {
@@ -415,9 +415,9 @@ barba.init({
             { "--border-progress": "0%" },
             {
               "--border-progress": "100%",
-              duration: 1,
+              duration: 0.8,
               ease: "power2.out",
-              delay: 0.2,
+              delay: 0.1,
             },
           );
         }
