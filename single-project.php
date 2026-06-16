@@ -76,7 +76,7 @@ while (have_posts()) :
             <?php foreach ($media_items as $media) : ?>
                 <div class="single-media-container" style="width: 100%; overflow: hidden; ">
                     <?php if ($media['type'] === 'video') : ?>
-                        <video src="<?php echo esc_url($media['url']); ?>" style="width: 100%; height: auto; display: block;" autoplay muted loop playsinline></video>
+                        <video class="lazy-video" src="<?php echo esc_url($media['url']); ?>" style="width: 100%; height: auto; display: block;" muted loop playsinline></video>
                     <?php else : ?>
                         <img src="<?php echo esc_url($media['url']); ?>" style="width: 100%; height: auto; display: block;" alt="<?php the_title_attribute(); ?>">
                     <?php endif; ?>

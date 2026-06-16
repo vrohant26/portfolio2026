@@ -407,6 +407,27 @@ const initInteractionSounds = () => {
   // Also trigger for swiper navigation if any (though click on slide is covered)
 };
 
+const initVideoObserver = () => {
+  const videos = document.querySelectorAll(".lazy-video");
+  if (!videos.length) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target;
+        if (entry.isIntersecting) {
+          video.play().catch((e) => console.warn("Video play failed:", e));
+        } else {
+          video.pause();
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+
+  videos.forEach((video) => observer.observe(video));
+};
+
 const initHeaderScroll = () => {
   const header = document.querySelector("header");
   if (!header) return;
@@ -429,6 +450,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initArchiveFilter();
   initChat();
   initInteractionSounds();
+  initVideoObserver();
   initHeaderScroll();
   setInterval(updateMumbaiTime, 1000);
   updateMumbaiTime();

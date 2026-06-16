@@ -19,6 +19,7 @@ const reinitPlugins = () => {
   updateActiveLink();
   if (typeof initArchiveFilter === "function") initArchiveFilter();
   if (typeof initChat === "function") initChat();
+  if (typeof initVideoObserver === "function") initVideoObserver();
 };
 
 /* ==========================================================================
@@ -229,7 +230,7 @@ const animationOtherToWorkEnter = (container) => {
   tl.progress(1);
 
   // Wait 0.5s before playing the reverse animation to prevent overlap
-  gsap.delayedCall(0.5, () => {
+  gsap.delayedCall(0.2, () => {
     tl.reverse();
   });
 };
