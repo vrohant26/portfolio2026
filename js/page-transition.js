@@ -228,8 +228,8 @@ const animationOtherToWorkEnter = (container) => {
   // Immediately put the elements in their hidden 'end' state
   tl.progress(1);
 
-  // Explicitly wait 0.5s before playing the reverse animation
-  gsap.delayedCall(0, () => {
+  // Wait 1s before playing the reverse animation to prevent overlap
+  gsap.delayedCall(1, () => {
     tl.reverse();
   });
 };
@@ -280,8 +280,11 @@ const animationFadeEnter = (container, skipBorder = false) => {
 
 const getSkipBorder = (data) => {
   const isCurrentSingle =
-    data.current.container.querySelector("#single-project");
-  const isNextSingle = data.next.container.querySelector("#single-project");
+    data.current.container.querySelector("#single-project") ||
+    data.current.container.querySelector("#case-study-template");
+  const isNextSingle =
+    data.next.container.querySelector("#single-project") ||
+    data.next.container.querySelector("#case-study-template");
 
   if (isCurrentSingle || isNextSingle) {
     return false;
@@ -351,7 +354,8 @@ barba.init({
       leave(data) {
         const done = this.async();
         const isFromSingle =
-          data.current.container.querySelector("#single-project");
+          data.current.container.querySelector("#single-project") ||
+          data.current.container.querySelector("#case-study-template");
         // Use fade out if coming from contact page or single project
         if (data.current.namespace === "contact" || isFromSingle) {
           animationSimpleFadeLeave(data.current.container, done);
@@ -362,7 +366,8 @@ barba.init({
       enter(data) {
         reinitPlugins();
         const isFromSingle =
-          data.current.container.querySelector("#single-project");
+          data.current.container.querySelector("#single-project") ||
+          data.current.container.querySelector("#case-study-template");
         if (isFromSingle) {
           gsap.set(data.next.container, { opacity: 0, zIndex: 2 });
           if (typeof initSwiper === "function") initSwiper();

@@ -67,9 +67,16 @@ get_header();
             }
             ?>
             <?php
+            $template_file = get_post_meta(get_the_ID(), '_wp_page_template', true);
             $archive_url = get_post_meta(get_the_ID(), '_archive_url', true);
-            $tag = $archive_url ? 'a' : 'div';
-            $href = $archive_url ? 'href="' . esc_url($archive_url) . '" target="_blank" rel="noopener noreferrer"' : '';
+            
+            if ($template_file === 'template-case-study.php') {
+                $tag = 'a';
+                $href = 'href="' . esc_url(get_permalink()) . '"';
+            } else {
+                $tag = $archive_url ? 'a' : 'div';
+                $href = $archive_url ? 'href="' . esc_url($archive_url) . '" target="_blank" rel="noopener noreferrer"' : '';
+            }
             ?>
             <<?php echo $tag; ?> <?php echo $href; ?> class="archive-item flex direction-column  <?php echo esc_attr($term_slugs); ?>" data-category="<?php echo esc_attr($term_slugs); ?>" style="display: block;">
               <div class="archive-image mb-sm flex justify-center align-end">

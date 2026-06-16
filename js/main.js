@@ -407,6 +407,20 @@ const initInteractionSounds = () => {
   // Also trigger for swiper navigation if any (though click on slide is covered)
 };
 
+const initHeaderScroll = () => {
+  const header = document.querySelector("header");
+  if (!header) return;
+  window.addEventListener("scroll", (e) => {
+    // Determine the scroll position whether it's window or an inner scrolling element (like .bottom)
+    const scrollY = (e.target === document || e.target === window) ? window.scrollY : e.target.scrollTop;
+    if (scrollY > 150) {
+      header.classList.add("scrolled");
+    } else {
+      header.classList.remove("scrolled");
+    }
+  }, true); // Use capture phase because scroll events don't bubble
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initScramble();
@@ -415,6 +429,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initArchiveFilter();
   initChat();
   initInteractionSounds();
+  initHeaderScroll();
   setInterval(updateMumbaiTime, 1000);
   updateMumbaiTime();
 });
