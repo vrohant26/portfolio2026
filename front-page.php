@@ -21,11 +21,47 @@ get_header();
         if ($project_query->have_posts()) :
           $card_index = 0;
           while ($project_query->have_posts()) : $project_query->the_post();
-            $image = get_the_post_thumbnail_url(get_the_ID(), 'large');
+            $post_id = get_the_ID();
+            $image = get_the_post_thumbnail_url($post_id, 'large');
             if (!$image) {
-              $previews = get_post_meta(get_the_ID(), '_project_previews', true);
+              $image = get_the_post_thumbnail_url($post_id, 'full');
+            }
+
+            if (!$image) {
+              $previews = get_post_meta($post_id, '_project_previews', true);
+              if (!is_array($previews) || empty($previews)) {
+                $previews = [];
+                for ($i = 1; $i <= 4; $i++) {
+                  $val = get_post_meta($post_id, '_project_preview_' . $i, true);
+                  if ($val) $previews[] = $val;
+                }
+              }
+
               if (is_array($previews) && !empty($previews)) {
-                $image = $previews[0];
+                foreach ($previews as $p_item) {
+                  if (!$p_item) continue;
+                  if (is_numeric($p_item)) {
+                    $mime = get_post_mime_type($p_item);
+                    if ($mime && strpos($mime, 'video') === 0) continue;
+                    $url = wp_get_attachment_image_url($p_item, 'large');
+                    if (!$url) $url = wp_get_attachment_url($p_item);
+                    if ($url) {
+                      $image = $url;
+                      break;
+                    }
+                  } elseif (is_string($p_item) && (filter_var($p_item, FILTER_VALIDATE_URL) || strpos($p_item, '/') !== false)) {
+                    $image = $p_item;
+                    break;
+                  }
+                }
+              }
+            }
+
+            if (!$image) {
+              $attached_images = get_attached_media('image', $post_id);
+              if (!empty($attached_images)) {
+                $first_img = reset($attached_images);
+                $image = wp_get_attachment_image_url($first_img->ID, 'large');
               }
             }
             ?>
