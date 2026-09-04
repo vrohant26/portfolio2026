@@ -980,9 +980,8 @@ img {
 }
 
 @media (width <=768px) {
-    #home {
-
-        padding-top: 10rem;
+    #home .top {
+        display: none;
     }
 
     .case-study-meta-grid {
