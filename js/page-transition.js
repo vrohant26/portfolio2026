@@ -20,6 +20,7 @@ const reinitPlugins = () => {
   if (typeof initArchiveFilter === "function") initArchiveFilter();
   if (typeof initChat === "function") initChat();
   if (typeof initVideoObserver === "function") initVideoObserver();
+  if (typeof initHomeCarousel === "function") initHomeCarousel();
 };
 
 /* ==========================================================================
@@ -73,6 +74,7 @@ const getOtherTimeline = (container, skipBorder = false) => {
 
   const otherElements = Array.from(otherElementsNodes).filter((el) => {
     if (el.closest("h1, h2, h3, h4, h5, h6, p")) return false;
+    if (el.closest(".stacked-carousel")) return false;
     if (el.tagName.toLowerCase() === "svg") return true;
     return !Array.from(otherElementsNodes).some(
       (otherEl) => otherEl !== el && otherEl.contains(el),
@@ -141,6 +143,21 @@ const getOtherTimeline = (container, skipBorder = false) => {
         ease: "expo.inOut",
       },
       "-=1",
+    );
+  }
+
+  const stackedCarousel = container.querySelector(".stacked-carousel");
+  if (stackedCarousel) {
+    tl.fromTo(
+      stackedCarousel,
+      { yPercent: -120, opacity: 0 },
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: 1.2,
+        ease: "expo.inOut",
+      },
+      0,
     );
   }
 
@@ -299,6 +316,9 @@ const getSkipBorder = (data) => {
 
 barba.hooks.before(() => {
   document.body.style.pointerEvents = "none";
+  if (typeof window._homeCarouselCleanup === "function") {
+    window._homeCarouselCleanup();
+  }
 });
 
 barba.hooks.after(() => {

@@ -64,7 +64,7 @@ Text Domain: custom-portfolio
     --sm-spacing: 1rem;
     --md-spacing: 2rem;
     --lg-spacing: 4rem;
-    --xl-spacing: ;
+    --xl-spacing: 4rem;
     --fs-xs: clamp(0.625rem, 0.5969rem + 0.1225vw, 0.75rem);
     --fs-sm: clamp(0.875rem, 0.8326rem + 0.186vw, 1rem);
     --fs-md: clamp(1.5rem, 1.3571rem + 0.7143vw, 2rem);
@@ -547,6 +547,125 @@ img {
     width: 50%
 }
 
+#home {
+    height: 100%;
+    box-sizing: border-box;
+    padding-bottom: clamp(3rem, 5vh, 4.5rem);
+    padding-top: 5rem;
+}
+
+#home .top::after {
+    display: none;
+}
+
+#home .top {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding-top: 0;
+}
+
+#home .bottom {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-bottom: 0;
+}
+
+/* Stacked Featured Projects Carousel (Homepage) */
+.stacked-carousel {
+    width: clamp(280px, 24vw, 380px);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    user-select: none;
+}
+
+.stacked-cards-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    margin-top: 2.5rem;
+}
+
+.stacked-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--gray-100);
+    border: 1px solid var(--gray-300);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    transform-origin: center top;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    transition: border-color 0.3s ease;
+    will-change: transform, opacity, filter;
+}
+
+.stacked-card:hover {
+    border-color: var(--light);
+}
+
+.stacked-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+}
+
+.stacked-card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--gray-100);
+    color: var(--gray-500);
+    padding: 1rem;
+    font-size: var(--fs-xs);
+    text-align: center;
+}
+
+.stacked-progress-container {
+    width: 100%;
+    height: 2px;
+    background-color: var(--gray-300);
+    margin-top: 1.25rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.stacked-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background-color: var(--light);
+}
+
+.stacked-carousel-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.75rem;
+}
+
+.stacked-carousel-footer a {
+    text-decoration: none;
+    letter-spacing: 0.05em;
+}
+
 
 /* Archive Grid */
 .archive-grid {
@@ -861,6 +980,10 @@ img {
 }
 
 @media (width <=768px) {
+    #home {
+
+        padding-top: 10rem;
+    }
 
     .case-study-meta-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -892,5 +1015,10 @@ img {
 
     .archive-grid {
         grid-template-columns: repeat(1, 1fr);
+    }
+
+
+    .stacked-cards-container {
+        margin-top: 1.25rem;
     }
 }

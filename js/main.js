@@ -442,6 +442,156 @@ const initHeaderScroll = () => {
   }, true); // Use capture phase because scroll events don't bubble
 };
 
+const initHomeCarousel = () => {
+  const container = document.querySelector(".stacked-carousel");
+  if (!container) return;
+
+  // Clean up previous instance if exists
+  if (window._homeCarouselCleanup) {
+    window._homeCarouselCleanup();
+  }
+
+  const cards = Array.from(container.querySelectorAll(".stacked-card"));
+  const progressBar = container.querySelector(".stacked-progress-bar");
+  if (!cards.length) return;
+
+  let currentIndex = 0;
+  const totalCards = cards.length;
+  let progressTween = null;
+  const slideDuration = 4.5; // seconds per card
+
+  const updateCardPositions = (animated = true) => {
+    cards.forEach((card, i) => {
+      const rel = (i - currentIndex + totalCards) % totalCards;
+
+      if (rel === 0) {
+        // Front active card (Main project)
+        gsap.to(card, {
+          y: 0,
+          scale: 1,
+          opacity: 1,
+          filter: "brightness(100%)",
+          zIndex: 10,
+          duration: animated ? 0.6 : 0,
+          ease: "power2.out",
+        });
+        card.style.pointerEvents = "auto";
+      } else if (rel === 1) {
+        // 1st card behind (smaller and shifted up)
+        gsap.to(card, {
+          y: -18,
+          scale: 0.92,
+          opacity: 0.9,
+          filter: "brightness(75%)",
+          zIndex: 9,
+          duration: animated ? 0.6 : 0,
+          ease: "power2.out",
+        });
+        card.style.pointerEvents = "auto";
+      } else if (rel === 2) {
+        // 2nd card behind (even smaller and shifted further up)
+        gsap.to(card, {
+          y: -34,
+          scale: 0.84,
+          opacity: 0.75,
+          filter: "brightness(55%)",
+          zIndex: 8,
+          duration: animated ? 0.6 : 0,
+          ease: "power2.out",
+        });
+        card.style.pointerEvents = "none";
+      } else {
+        // Inactive hidden cards behind
+        gsap.to(card, {
+          y: -46,
+          scale: 0.76,
+          opacity: 0,
+          filter: "brightness(35%)",
+          zIndex: 1,
+          duration: animated ? 0.6 : 0,
+          ease: "power2.out",
+        });
+        card.style.pointerEvents = "none";
+      }
+    });
+  };
+
+  const nextCard = () => {
+    if (totalCards <= 1) return;
+
+    const frontCard = cards[currentIndex];
+    gsap.to(frontCard, {
+      y: -45,
+      scale: 0.9,
+      opacity: 0,
+      duration: 0.45,
+      ease: "power2.in",
+      onComplete: () => {
+        currentIndex = (currentIndex + 1) % totalCards;
+        updateCardPositions(true);
+      },
+    });
+  };
+
+  const startProgress = () => {
+    if (!progressBar || totalCards <= 1) return;
+
+    if (progressTween) progressTween.kill();
+    gsap.set(progressBar, { width: "0%" });
+
+    progressTween = gsap.to(progressBar, {
+      width: "100%",
+      duration: slideDuration,
+      ease: "none",
+      onComplete: () => {
+        nextCard();
+        startProgress();
+      },
+    });
+  };
+
+  // Click on stacked cards behind to jump to them
+  const cardClickHandlers = cards.map((card, i) => {
+    const handler = (e) => {
+      const rel = (i - currentIndex + totalCards) % totalCards;
+      if (rel !== 0) {
+        e.preventDefault();
+        currentIndex = i;
+        updateCardPositions(true);
+        startProgress();
+      }
+    };
+    card.addEventListener("click", handler);
+    return { card, handler };
+  });
+
+  // Pause timer/progress on hover
+  const onMouseEnter = () => {
+    if (progressTween) progressTween.pause();
+  };
+
+  const onMouseLeave = () => {
+    if (progressTween) progressTween.resume();
+  };
+
+  container.addEventListener("mouseenter", onMouseEnter);
+  container.addEventListener("mouseleave", onMouseLeave);
+
+  // Initial layout and start
+  updateCardPositions(false);
+  startProgress();
+
+  // Cleanup handler for Barba navigation
+  window._homeCarouselCleanup = () => {
+    if (progressTween) progressTween.kill();
+    container.removeEventListener("mouseenter", onMouseEnter);
+    container.removeEventListener("mouseleave", onMouseLeave);
+    cardClickHandlers.forEach(({ card, handler }) => {
+      card.removeEventListener("click", handler);
+    });
+  };
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initScramble();
@@ -452,6 +602,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initInteractionSounds();
   initVideoObserver();
   initHeaderScroll();
+  initHomeCarousel();
   setInterval(updateMumbaiTime, 1000);
   updateMumbaiTime();
 });
+
